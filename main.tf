@@ -17,7 +17,7 @@ locals {
   }
   repo_access = {
     for repo, obj in var.repositories : repo => {
-      read_access = lookup(obj, "read_arns", [])
+      read_access  = lookup(obj, "read_arns", [])
       write_access = lookup(obj, "write_arns", [])
     }
   }
@@ -25,9 +25,9 @@ locals {
 
 data "aws_iam_policy_document" "this" {
   for_each = local.repo_access
-  
+
   statement {
-    sid = "ECRRead"
+    sid    = "ECRRead"
     effect = "Allow"
     actions = [
       "ecr:BatchCheckLayerAvailability",
@@ -35,12 +35,12 @@ data "aws_iam_policy_document" "this" {
       "ecr:GetDownloadUrlForLayer",
     ]
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = lookup(local.repo_access[each.key], "read_access", [])
     }
   }
   statement {
-    sid = "ECRPush"
+    sid    = "ECRPush"
     effect = "Allow"
     actions = [
       "ecr:GetDownloadUrlForLayer",
@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "this" {
       "ecr:CompleteLayerUpload"
     ]
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = lookup(local.repo_access[each.key], "write_access", [])
     }
   }
@@ -79,5 +79,5 @@ resource "aws_ecr_repository_policy" "this" {
   for_each = var.repositories
 
   repository = aws_ecr_repository.this[each.key].name
-  policy = data.aws_iam_policy_document.this[each.key].json
+  policy     = data.aws_iam_policy_document.this[each.key].json
 }
