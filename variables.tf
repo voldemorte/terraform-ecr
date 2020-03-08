@@ -26,6 +26,15 @@ variable "repositories" {
           countNumber   = 30
         }
       ]
+      // These ARNS can be accounts that can read repository images or individual IAM users/roles
+      read_arns = [
+        "arn:aws:iam::983456789123:user/test",
+        "arn:aws:iam::123456789101:role/awesome"
+      ]
+      write_arns = [
+        "arn:aws:iam::983456789123:user/test",
+        "arn:aws:iam::123456789101:role/awesome"
+      ]
     },
     debian = {
       options = {
@@ -45,6 +54,14 @@ variable "repositories" {
           countType     = "imageCountMoreThan"
           countNumber   = 30
         }
+      ]
+      read_arns = [
+        "arn:aws:iam::983456789123:user/test",
+        "arn:aws:iam::123456789101:role/awesome"
+      ]
+      write_arns = [
+        "arn:aws:iam::983456789123:user/test",
+        "arn:aws:iam::123456789101:role/awesome"
       ]
     }
   }
